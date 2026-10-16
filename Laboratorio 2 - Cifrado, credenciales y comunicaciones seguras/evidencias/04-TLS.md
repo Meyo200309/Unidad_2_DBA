@@ -1,15 +1,14 @@
 ¿Qué sucede con la información mientras viaja entre el cliente y PostgreSQL?
  La información se transmite a través de la red y, si la conexión no está protegida, podría ser observada o interceptada por personas no autorizadas.
 
-¿Qué riesgo existe si la conexión no está protegida?
- Una persona con acceso al tráfico de red podría intentar obtener información sensible que se está intercambiando entre el cliente y el servidor, como consultas, resultados o credenciales.
+1. ¿La conexión actual utiliza TLS?
+ No, la conexión actual no utiliza TLS.
 
-¿Qué mecanismo se utiliza para proteger la comunicación?
- Se utiliza TLS (Transport Layer Security) para proteger los datos durante su transmisión entre el cliente y PostgreSQL.
+2. ¿Qué versión de TLS se está utilizando?
+ No aplica, ya que la conexión no está utilizando TLS.
 
-¿Qué protege TLS?
- TLS proporciona:
+3. ¿Qué algoritmo de cifrado aparece?
+ Ninguno, porque la conexión no está cifrada.
 
-Confidencialidad: evita que terceros lean la información transmitida.
-Integridad: permite detectar modificaciones no autorizadas.
-Autenticación: ayuda a verificar la identidad del servidor.
+4. ¿Qué diferencia existe entre una conexión protegida con TLS y una conexión sin TLS?
+ Una conexión con TLS cifra la información que se transmite entre el cliente y el servidor, mientras que una conexión sin TLS transmite los datos sin cifrar, por lo que podrían ser interceptados por terceros.
