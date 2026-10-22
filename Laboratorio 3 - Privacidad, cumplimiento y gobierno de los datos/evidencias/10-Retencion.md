@@ -47,5 +47,3 @@ Una política adecuada fija periodos distintos según el dato y su finalidad, y 
 ## 5. Conclusión
 
 La política de conservar todos los datos indefinidamente no es compatible con la minimización ni con una gestión responsable del ciclo de vida de los datos. 
-Antes de fijar un periodo, la organización debe definir la finalidad, las obligaciones legales y el riesgo de cada dato, 
-y dejar documentada la justificación del plazo y la acción que se aplicará cuando termine.
