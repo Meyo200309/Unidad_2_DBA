@@ -1,4 +1,4 @@
-# Actividad 11 — Matriz de gobierno de datos
+# Actividad 11 
 
 ## 1. Objetivo
 
@@ -6,25 +6,22 @@ Diseñar una matriz de gobierno de datos para los principales campos de la tabla
 
 ## 2. Procedimiento
 
-1. Se tomaron los campos principales de la tabla: `nombre`, `correo`, `telefono`, `rfc`, `edad`, `ciudad` y `codigo_postal`.
-2. Para cada campo se definió: finalidad, responsable (área dueña del dato), usuarios autorizados, protección, retención y acción al finalizar el periodo.
+1. Se tomaron los campos principales de la tabla: nombre, correo, telefono, rfc, edad, ciudad y codigo_postal.
+2. Para cada campo se definió: finalidad, responsable, usuarios autorizados, protección, retención y acción al finalizar el periodo.
 3. Se asignaron los roles (Atención al cliente, Facturación, Analítica, DBA y Dirección) únicamente cuando existe una necesidad funcional, sin asignar todos los roles a todos los datos.
 
 ## 3. Resultado
 
 | Dato | Finalidad | Responsable | Usuarios autorizados | Protección | Retención | Acción al finalizar |
 |---|---|---|---|---|---|---|
-| nombre | Identificar al cliente y dirigirse a él | Atención al cliente | Atención al cliente, Facturación | Acceso por rol; cifrado en tránsito y en reposo | Mientras dure la relación con el cliente + plazo legal | Eliminar o anonimizar |
-| correo | Comunicación, notificaciones y envío de comprobantes | Atención al cliente | Atención al cliente, Facturación | Acceso por rol; cifrado; auditoría de consultas | Mientras dure la relación con el cliente | Eliminar |
-| telefono | Contacto alterno para atención | Atención al cliente | Atención al cliente | Acceso por rol; enmascarado parcial en consultas | Mientras dure la relación o hasta que el cliente lo retire | Eliminar |
-| rfc | Facturación y obligaciones fiscales | Facturación | Facturación | Acceso restringido; cifrado a nivel de columna; auditoría de consultas | Plazo fiscal aplicable (generalmente 5 años; verificar normativa) | Bloquear al terminar la relación y eliminar al vencer el plazo fiscal |
-| edad | Estadísticas y validación de mayoría de edad | Analítica | Analítica (solo en rangos), Dirección (solo agregados) | Vista con rangos de edad; sin acceso a la tabla base | Mientras sea útil para la finalidad | Conservar solo el rango o eliminar |
-| ciudad | Envíos y estadísticas | Analítica | Analítica, Dirección (solo agregados) | Vista agregada; acceso por rol | Mientras dure la relación con el cliente | Anonimizar (conservar agregados) o eliminar |
-| codigo_postal | Facturación y envíos | Facturación | Facturación; Analítica (solo como región) | Acceso por rol; generalización a región para analítica | Mientras dure la relación + plazo fiscal | Eliminar o generalizar a región |
+| nombre | Identificar al cliente y dirigirse a él | Atención al cliente | Atención al cliente, Facturación | Acceso por rol, cifrado en tránsito y en reposo | Mientras dure la relación con el cliente más plazo legal | Eliminar o anonimizar |
+| correo | Comunicación, notificaciones y envío de comprobantes | Atención al cliente | Atención al cliente, Facturación | Acceso por rol, cifrado, auditoría de consultas | Mientras dure la relación con el cliente | Eliminar |
+| telefono | Contacto alterno para atención | Atención al cliente | Atención al cliente | Acceso por rol, enmascarado parcial en consultas | Mientras dure la relación o hasta que el cliente lo retire | Eliminar |
+| rfc | Facturación y obligaciones fiscales | Facturación | Facturación | Acceso restringido, cifrado a nivel de columna, auditoría de consultas | Plazo fiscal aplicable | Bloquear al terminar la relación y eliminar al vencer el plazo fiscal |
+| edad | Estadísticas y validación de mayoría de edad | Analítica | Analítica, Dirección | Vista con rangos de edad, sin acceso a la tabla base | Mientras sea útil para la finalidad | Conservar solo el rango o eliminar |
+| ciudad | Envíos y estadísticas | Analítica | Analítica, Dirección | Vista agregada, acceso por rol | Mientras dure la relación con el cliente | Anonimizar o eliminar |
+| codigo_postal | Facturación y envíos | Facturación | Facturación, Analítica | Acceso por rol, generalización a región para analítica | Mientras dure la relación más plazo fiscal | Eliminar o generalizar a región |
 
-**Sobre el rol de DBA:** administra técnicamente la base de datos (respaldos, rendimiento y permisos), pero no es usuario funcional de los datos. Su acceso al contenido debe limitarse a lo necesario para el mantenimiento y quedar auditado.
-
-**Sobre el rol de Dirección:** solo requiere información agregada para la toma de decisiones, no datos individuales.
 
 ## 4. Análisis
 
