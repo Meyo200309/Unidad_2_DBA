@@ -1,5 +1,5 @@
 # Evidencia de Act.5,6,7
-
+ 
 ## 1. Objetivo
 
 1. Analizar si una organización puede reutilizar los datos de sus clientes para una nueva finalidad(promociones personalizadas) y qué controles técnicos limitan la información entregada.
