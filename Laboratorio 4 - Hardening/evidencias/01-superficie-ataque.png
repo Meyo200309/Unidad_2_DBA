@@ -1,0 +1,98 @@
+# Actividad 1 - Identificación de la Superficie de Ataque
+
+## Objetivo
+
+Identificar la superficie de ataque inicial del servidor PostgreSQL mediante la revisión de parámetros de configuración relacionados con la conectividad, autenticación y seguridad. El propósito es detectar elementos que puedan representar riesgos antes de aplicar medidas de hardening.
+
+---
+
+## Procedimiento
+
+Se ejecutaron consultas de diagnóstico sobre la instancia PostgreSQL para obtener información relacionada con:
+
+- Puerto de servicio utilizado.
+- Interfaces de red que aceptan conexiones.
+- Estado de SSL/TLS.
+- Método de cifrado de contraseñas.
+- Conexiones activas registradas en el servidor.
+
+Consultas utilizadas:
+
+```sql
+SHOW port;
+
+SHOW listen_addresses;
+
+SHOW ssl;
+
+SHOW password_encryption;
+
+SELECT
+    pid,
+    usename,
+    datname,
+    client_addr,
+    application_name
+FROM pg_stat_activity;
+```
+
+---
+
+## Resultado
+
+### Configuración identificada
+
+| Elemento | Valor |
+|-----------|-----------|
+| Puerto PostgreSQL | 5432 |
+| listen_addresses | * |
+| SSL | off |
+| password_encryption | scram-sha-256 |
+
+### Conexiones activas
+
+Mediante la consulta sobre `pg_stat_activity` se identificaron múltiples sesiones activas provenientes de clientes pgAdmin 4.
+
+También se observaron conexiones remotas desde:
+
+```text
+172.18.0.5
+```
+
+y conexiones correspondientes a otros usuarios y bases de datos dentro del entorno compartido.
+
+### Matriz de evaluación
+
+| Elemento | Estado actual | ¿Es necesario? | Riesgo identificado |
+|-----------|-----------|-----------|-----------|
+| Puerto PostgreSQL | 5432 | Sí | Puerto estándar ampliamente conocido y frecuentemente escaneado |
+| Interfaces de escucha | * | No necesariamente | Permite conexiones desde cualquier interfaz de red |
+| SSL/TLS | Off | No | Las comunicaciones no se encuentran cifradas |
+| Contraseñas | SCRAM-SHA-256 | Sí | Riesgo bajo debido al uso de un algoritmo moderno |
+| Conexiones remotas | 172.18.0.5 | Sí | Posibles intentos de acceso desde la red |
+| Sesiones activas | Múltiples | Sí | Mayor superficie de exposición si permanecen abiertas |
+| Herramienta cliente | pgAdmin 4 | Sí | Permite identificar aplicaciones de administración utilizadas |
+
+---
+
+## Análisis
+
+El puerto configurado corresponde al valor predeterminado de PostgreSQL (`5432`), lo cual facilita la identificación del servicio durante exploraciones de red.
+
+La configuración `listen_addresses='*'` representa uno de los principales riesgos encontrados, ya que permite al servidor aceptar conexiones desde cualquier interfaz disponible. Esto incrementa significativamente la superficie de ataque del sistema.
+
+La revisión del parámetro `ssl` mostró que el cifrado de comunicaciones se encuentra deshabilitado (`off`). Como consecuencia, las credenciales y la información transmitida entre cliente y servidor podrían ser interceptadas si la comunicación atraviesa redes inseguras.
+
+Por otra parte, la configuración `password_encryption='scram-sha-256'` constituye una práctica recomendada de seguridad debido a que utiliza un mecanismo moderno para el almacenamiento de contraseñas.
+
+Finalmente, el análisis de `pg_stat_activity` permitió observar múltiples conexiones activas provenientes de pgAdmin 4. La existencia de varias sesiones simultáneas evidencia la necesidad de monitorear conexiones y restringir accesos únicamente a usuarios autorizados.
+
+---
+
+## Conclusión
+
+La identificación de la superficie de ataque permitió conocer el estado inicial de seguridad de la instancia PostgreSQL antes de aplicar medidas de hardening. Se detectó que el servidor escucha conexiones desde cualquier interfaz de red y que las comunicaciones no utilizan cifrado SSL/TLS, lo que incrementa el riesgo de acceso no autorizado e interceptación de información.
+
+Como aspecto positivo, las contraseñas se almacenan utilizando el algoritmo `SCRAM-SHA-256`, considerado una práctica adecuada de seguridad.
+
+Los hallazgos obtenidos permiten establecer como acciones prioritarias de hardening la restricción de las interfaces de escucha, la habilitación de SSL/TLS y el fortalecimiento de los controles de acceso y monitoreo de conexiones.
