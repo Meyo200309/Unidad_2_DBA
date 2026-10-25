@@ -155,7 +155,21 @@ o
 - Separar cuentas administrativas de cuentas de aplicación.
 - Revisar periódicamente los privilegios asignados.
 
----
+## Revisión de Roles
+
+Se realizó una revisión de los roles existentes mediante la vista `pg_roles`.
+
+### Hallazgos
+
+- No se identificaron superusuarios en los registros visibles.
+- No se identificaron roles con privilegios `CREATEROLE`.
+- No se identificaron roles con privilegios `CREATEDB`.
+- Existen roles con capacidad de inicio de sesión (`LOGIN`).
+- Existen roles utilizados únicamente para asignación de privilegios y que no pueden iniciar sesión.
+
+### Análisis
+
+La ausencia de privilegios administrativos en los roles visibles reduce el riesgo de modificaciones no autorizadas sobre la instancia PostgreSQL. La separación entre roles con capacidad de inicio de sesión y roles utilizados para administración de permisos constituye una práctica alineada con el principio de mínimo privilegio.
 
 ## Resultado Esperado Después del Hardening
 
